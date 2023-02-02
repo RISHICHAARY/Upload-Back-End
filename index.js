@@ -14,7 +14,6 @@ let mailTransporter = nodemailer.createTransport(
 );
 
 const app = express();
-
 app.use(cors());
 app.use(express.json());
 
@@ -24,6 +23,84 @@ mongoose.connect("mongodb://Rishichaary:rishi1234@ac-yx8v9oa-shard-00-00.por1vin
 });
 
 const user_model = require('./models/User_Mode');
+
+//-----------------------------------------------------------------Password_Mailer------------------------------------------------------------------
+
+app.put('/PasswordMailer' , async (req , res) => {
+    if(req.body.type == 'user'){
+        await user_model.find({email : req.body.email}, (err , result) => {
+            if(err){console.log(err);}
+            let details = {
+                from :"manageladen01@gmail.com",
+                to: req.body.email,
+                subject : "Password of your magic corner account.",
+                text : "Hi "+result[0].full_name+","+"."+result[0].password+" is your Password."
+            };
+            mailTransporter.sendMail( details , (err) =>{
+                if(err){
+                    console.log(err);
+                }
+            } )
+            res.send("Done");
+        }).clone();
+    }
+    else{
+        await admin_model.find({email : req.body.email}, (err , result) => {
+            if(err){console.log(err);}
+            let details = {
+                from :"manageladen01@gmail.com",
+                to: req.body.email,
+                subject : "Password of your magic corner account.",
+                text : "Hi "+result[0].full_name+","+"."+result[0].password+" is your Password."
+            };
+            mailTransporter.sendMail( details , (err) =>{
+                if(err){
+                    console.log(err);
+                }
+            } )
+            res.send("Done");
+        }).clone();
+    }
+});
+
+//--------------------------------------------------------------------OTP_Mailer----------------------------------------------------------------------
+
+app.put('/OtpMailer' , async (req , res) => {
+    if(req.body.type == 'user'){
+        await user_model.find({email : req.body.email}, (err , result) => {
+            if(err){console.log(err);}
+            let details = {
+                from :"manageladen01@gmail.com",
+                to: req.body.email,
+                subject : "OTP To verify your magic corner account.",
+                text : "Hi "+result[0].full_name+", Use "+req.body.otp+" To get your Magic Corner Account Password."
+            };
+            mailTransporter.sendMail( details , (err) =>{
+                if(err){
+                    console.log(err);
+                }
+            })
+            res.send("Done");
+        }).clone();
+    }
+    else{
+        await admin_model.find({email : req.body.email}, (err , result) => {
+            if(err){console.log(err);}
+            let details = {
+                from :"manageladen01@gmail.com",
+                to: req.body.email,
+                subject : "OTP To verify your magic corner account.",
+                text : "Hi "+result[0].full_name+", Use "+req.body.otp+" To get your Magic Corner Account Password."
+            };
+            mailTransporter.sendMail( details , (err) =>{
+                if(err){
+                    console.log(err);
+                }
+            })
+            res.send("Done");
+        }).clone();
+    }
+});
 
 //--------------------------------------------------------------------User_Mailer----------------------------------------------------------------------
 
